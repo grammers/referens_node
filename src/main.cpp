@@ -25,8 +25,9 @@ float inputSens(float input){
 
 void joyCallback(const sensor_msgs::Joy::ConstPtr& msg)
 {
-	ref.linear.x = speedMap(msg->axes[5] + msg->axes[2]);
+	ref.linear.x = speedMap(-msg->axes[5] + msg->axes[2]);
 	ref.angular.z = inputSens(msg->axes[0]); 
+	if (ref.linear.x < 0) ref.angular.z = -ref.angular.z;	
 	referens.publish(ref);
 }
 
