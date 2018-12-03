@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh("~");
 	
 	nh.param<float>("max_velosety", vmax, 1.2);	
-	nh.param<float>("max_angular_velosety", wmax, 5.2);	
+	nh.param<float>("max_angular_velosety", wmax, 8.4);	
 
 	referens = n.advertise<geometry_msgs::Twist>("referens", 5);
 	joysub = n.subscribe<sensor_msgs::Joy>("joy", 5, joyCallback);
