@@ -12,7 +12,7 @@ float wmax;
 
 float speedMap(float input)
 {
-	return input * vmax / 2;
+	return input * vmax / 2; // mapt to desierd speed in m/s
 }
 
 // adjust input sensitivity
@@ -25,9 +25,10 @@ float inputSens(float input){
 
 void joyCallback(const sensor_msgs::Joy::ConstPtr& msg)
 {
-	ref.linear.x = speedMap(-msg->axes[5] + msg->axes[2]);
+	ref.linear.x = speedMap(-msg->axes[5] + msg->axes[2]); // -forword_speed + bacvards speed => (-2,2)
 	ref.angular.z = inputSens(msg->axes[0]); 
-	if (ref.linear.x < 0) ref.angular.z = -ref.angular.z;	
+
+	if (ref.linear.x < 0) ref.angular.z = -ref.angular.z;	// adjust stering if in revers
 	referens.publish(ref);
 }
 
@@ -40,8 +41,8 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 	ros::NodeHandle nh("~");
 	
-	nh.param<float>("max_velosety", vmax, 1.2);	
-	nh.param<float>("max_angular_velosety", wmax, 8.4);	
+	nh.param<float>("max_velosety", vmax, 1); // 1.2 theoretic max	
+	nh.param<float>("max_angular_velosety", wmax, 1); // 8.4 down scaild to macht control loop
 
 	referens = n.advertise<geometry_msgs::Twist>("referens", 5);
 	joysub = n.subscribe<sensor_msgs::Joy>("joy", 5, joyCallback);
